@@ -1,0 +1,23 @@
+[
+  {
+    "fuelType": "D",
+    "volume": 12000,
+    "price": 3.25,
+    "driverId": 1,
+    "date": "2017-09-09"
+  },
+  {
+    "fuelType": "98",
+    "volume": 8000,
+    "price": 1.1,
+    "driverId": 2,
+    "date": "2017-09-09"
+  },
+  {
+    "fuelType": "D",
+    "volume": 25360,
+    "price": 1.25,
+    "driverId": 3,
+    "date": "2017-09-09"
+  }
+]

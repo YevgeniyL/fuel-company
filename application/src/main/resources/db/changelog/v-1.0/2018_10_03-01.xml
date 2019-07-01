@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="rez" id="2018_10_03-01-create-index.PURCHASE.DRIVER_ID">
+        <validCheckSum>1:any</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PURCHASE_DRIVER_ID_index" columnNames="DRIVER_ID" tableName="PURCHASE"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="PURCHASE" indexName="PURCHASE_DRIVER_ID_index">
+            <column name="DRIVER_ID"/>
+        </createIndex>
+        <rollback>
+            <dropIndex tableName="PURCHASE" indexName="PURCHASE_DRIVER_ID_index"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="rez" id="2018_10_03-02-create-table.FUEL_TYPE">
+        <validCheckSum>1:any</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="FUEL_TYPE"/>
+            </not>
+        </preConditions>
+        <createTable tableName="FUEL_TYPE">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(200)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="CREATED" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISABLED" type="TIMESTAMP"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="FUEL_TYPE"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="rez" id="2018_10_03-02-add-column.FUEL_TYPE_ID">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="PURCHASE" columnName="FUEL_TYPE_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="PURCHASE">
+            <column name="FUEL_TYPE_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="PURCHASE" columnName="FUEL_TYPE_ID"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="rez" id="2018_10_03-02-add-foreign-key.FUEL_TYPE_ID_FK">
+        <validCheckSum>1:1</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FUEL_TYPE_ID_FK" foreignKeyTableName="PURCHASE"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="PURCHASE" baseColumnNames="FUEL_TYPE_ID"
+                                 constraintName="FUEL_TYPE_ID_FK"
+                                 referencedTableName="FUEL_TYPE" referencedColumnNames="ID"
+                                 onDelete="CASCADE"/>
+        <rollback>
+            <dropForeignKeyConstraint constraintName="FUEL_TYPE_ID_FK" baseTableName="PURCHASE"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="rez" id="2018_10_03-02-test-data.sql">
+        <sqlFile path="2018_10_03-01-test-data.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>
